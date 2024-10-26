@@ -38,14 +38,6 @@ class SettingController(SettingsUI):
             existing_data["digit"] = self.digit  # Обновление значения по ключу "digit"
             
             self.previous_digit = self.digit
-            
+            QMessageBox.information(self, "Информация", "Значение поменялось.")
             with open("settings.json", "w") as file:
                 json.dump(existing_data, file)
-
-            QMessageBox.information(self, "Информация", "Сохранилось")  # Запись обновленных данных обратно в файл
-
-        # self.close()
-
-
-
-        
