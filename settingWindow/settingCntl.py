@@ -31,11 +31,11 @@ class SettingController(SettingsUI):
         else:
             try:
                 with open("settings.json", "r") as file:
-                    existing_data = json.load(file)  # Чтение текущих данных из файла
+                    existing_data = json.load(file)  
             except (FileNotFoundError, json.JSONDecodeError):
-                existing_data = {}  # Инициализация пустого словаря, если файл не найден или пуст
+                existing_data = {}  
 
-            existing_data["digit"] = self.digit  # Обновление значения по ключу "digit"
+            existing_data["digit"] = self.digit 
             
             self.previous_digit = self.digit
             QMessageBox.information(self, "Информация", "Значение поменялось.")

@@ -7,6 +7,8 @@ class SettingsUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.digit = self.load_data()
+        self.previous_digit = self.digit
         self.add_btn = QPushButton("+")
         self.minus_btn = QPushButton("-")
         self.come_back_main_menu_btn = QPushButton("Назад")
@@ -14,8 +16,6 @@ class SettingsUI(QMainWindow):
 
 
     def setup_settings_ui(self):
-        self.digit = self.load_data()
-        self.previous_digit = self.digit
         self.digit_label = QLabel(f"Текущий счетчик: {self.digit}")
         layout = QVBoxLayout()
         title = QLabel("Это настройки")
