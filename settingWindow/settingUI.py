@@ -1,20 +1,18 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton
 
 
 class SettingsUI:
     def __init__(self):
-        self.a = 5
+
+        self.download_btn = QPushButton("Назад")
 
     def setup_settings_ui(self):
-        self.resize(600, 600)
-        self.setWindowTitle("Настройки")
 
-        # Создаем компоновку
         layout = QVBoxLayout()
         title = QLabel("Это настройки")
         layout.addWidget(title)
-
-        # Устанавливаем компоновку на центральный виджет
+        layout.addWidget(self.download_btn)
         central_widget = QWidget()
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
+        
