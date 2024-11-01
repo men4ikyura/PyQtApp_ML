@@ -30,6 +30,8 @@ class AppHandler(QMainWindow):
         """Показывает окно загрузки."""
         self.add_item_to_stack("Загрузочное меню", DownloadMainController)
 
+
+
     def add_item_to_stack(self, title, class_name):
         """Добавляет новый виджет в QStackedWidget и устанавливает его как текущий."""
         self.setWindowTitle(title)
@@ -45,4 +47,5 @@ class AppHandler(QMainWindow):
             widget_instance.setting_btn.clicked.connect(self.show_settings_window)
             widget_instance.download_btn.clicked.connect(self.show_download_window)
         else:
+            print(widget_instance.come_back_main_menu_btn)
             widget_instance.come_back_main_menu_btn.clicked.connect(self.show_main_window)
