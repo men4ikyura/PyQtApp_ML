@@ -35,9 +35,10 @@ class ShowImageWindow(QWidget):
     come_back = pyqtSignal()
       # Измените здесь на QWidget
     def __init__(self, file_path):
-        super().__init__()  # Добавьте вызов родительского конструктора
+        super().__init__()
         self.file_label = QLabel(self)
         self.come_back_to_download_menu_btn = QPushButton("Выбрать другой файл") # Подключаем кнопку "Назад"
+        self.start_process_image = QPushButton("Начать обработку изображения") # Подключаем кнопку "Назад"
         self.setup_before_process_image_ui(file_path)
         self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_signal)
 
@@ -51,7 +52,8 @@ class ShowImageWindow(QWidget):
             image_label = QLabel(self)
             image_label.setPixmap(scaled_pixmap)
             layout2.addWidget(self.file_label)
-            layout2.addWidget(image_label)
+            layout2.addWidget(self.file_label)
+            layout2.addWidget(self.start_process_image)
             layout2.addWidget(self.come_back_to_download_menu_btn)
 
             self.setLayout(layout2)  # Устанавливаем layout для текущего виджета

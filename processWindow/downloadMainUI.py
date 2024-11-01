@@ -17,7 +17,7 @@ class DownloadMainWindowUI(QMainWindow):
         self.come_back_main_menu_btn = QPushButton("Назад")
         self.open_file_button = QPushButton("Выбрать файл", self)
         self.open_file_button.setGeometry(150, 80, 100, 30)
-        
+        self.come_back_main_menu_btn.clicked.connect(self.emit_come_back_signal)
         self.central_widget = QWidget()
         self.setup_start_downaload_ui()
         self.connect_signals()
@@ -48,6 +48,8 @@ class DownloadMainWindowUI(QMainWindow):
             self.file_selected.emit(self.file_path)
 
 
+    def emit_come_back_signal(self):
+        self.come_back.emit() 
 
         
         
