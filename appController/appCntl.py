@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QPushButton, QVBoxLayout, QWidget
 from mainWindow.mainCntl import MainController
 from settingWindow.settingCntl import SettingController
-from processWindow.downloadMainCntl import DownloadMainController
+from processWindow.downloadMainCntl import DownloadMainWindowUI, ShowImageWindow
 from stackCntrl.stackCntrl import StackCntrl
 
 
@@ -20,16 +20,22 @@ class AppHandler(QMainWindow):
 
     def show_main_window(self):
         """Показывает главное окно приложения."""
-        self.add_item_to_stack("Главное меню", MainController)
+        widget_instance = self.add_item_to_stack("Главное меню", MainController)
+        widget_instance.setting_btn.clicked.connect(self.show_settings_window)
+        widget_instance.download_btn.clicked.connect(self.show_download_window)
+
 
     def show_settings_window(self):
         """Показывает окно настроек приложения."""
-        self.add_item_to_stack("Настройки", SettingController)
-
+        widget_instance = self.add_item_to_stack("Настройки", SettingController)
+        widget_instance.come_back.connect(self.show_main_window)
+        
+        
     def show_download_window(self):
         """Показывает окно загрузки."""
-        self.add_item_to_stack("Загрузочное меню", DownloadMainController)
-
+        widget_instance = self.add_item_to_stack("Загрузочное меню", DownloadMainWindowUI)
+        widget_instance.come_back.connect(self.show_main_window)
+        widget_instance.file_selected.connect(self.show_image_window)
 
 
     def add_item_to_stack(self, title, class_name):
@@ -42,10 +48,22 @@ class AppHandler(QMainWindow):
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
 
+        return widget_instance
+
+
+    def show_image_window(self, file_path):
+        self.setWindowTitle("Обработка изображения")
+        StackCntrl.clear_stacked_widget(self.stack)  # Очищаем стек перед добавлением нового виджета
+
+        # Создаем экземпляр переданного класса
+        widget_instance = ShowImageWindow(file_path)  
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
+        widget_instance.come_back.connect(self.show_download_window)
+
         # Подключаем кнопку возврата, если это не главное окно
-        if class_name is MainController:
-            widget_instance.setting_btn.clicked.connect(self.show_settings_window)
-            widget_instance.download_btn.clicked.connect(self.show_download_window)
-        else:
-            print(widget_instance.come_back_main_menu_btn)
-            widget_instance.come_back_main_menu_btn.clicked.connect(self.show_main_window)
+        # if class_name is MainController:
+        #     widget_instance.setting_btn.clicked.connect(self.show_settings_window)
+        #     widget_instance.download_btn.clicked.connect(self.show_download_window)
+        # else:
+        #     widget_instance.come_back.connect(self.show_main_window)

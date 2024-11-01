@@ -8,6 +8,7 @@ from processWindow.showImageWnd import ShowImageWindow
 
 class DownloadMainWindowUI(QMainWindow):
 
+    come_back = pyqtSignal()
     file_selected = pyqtSignal(str) 
 
     def __init__(self):
@@ -21,6 +22,7 @@ class DownloadMainWindowUI(QMainWindow):
         self.setup_start_downaload_ui()
         self.connect_signals()
         self.file_path = None
+        
     
 
     def connect_signals(self):
