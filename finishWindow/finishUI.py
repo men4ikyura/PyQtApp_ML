@@ -30,7 +30,7 @@ class FinishImageWindow(QWidget):
             layout2.addWidget(self.come_back_to_download_menu_btn)
 
             self.setLayout(layout2)  # Устанавливаем layout для текущего виджета
-            self.resize(400, 400)  # Устанавливаем размер окна
+            # self.resize(400, 400)  # Устанавливаем размер окна
 
     def emit_come_back_signal(self):
         self.come_back.emit() 

@@ -52,12 +52,12 @@ class ShowImageWindow(QWidget):
             image_label = QLabel(self)
             image_label.setPixmap(scaled_pixmap)
             layout2.addWidget(self.file_label)
-            layout2.addWidget(self.file_label)
-            layout2.addWidget(self.start_process_image)
+            layout2.addWidget(image_label)
             layout2.addWidget(self.come_back_to_download_menu_btn)
+            layout2.addWidget(self.start_process_image)
 
             self.setLayout(layout2)  # Устанавливаем layout для текущего виджета
-            self.resize(400, 400)  # Устанавливаем размер окна
+            self.resize(400, 400) 
 
     def emit_come_back_signal(self):
         self.come_back.emit() 
