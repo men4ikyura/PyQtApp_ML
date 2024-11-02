@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QPushButton, QVBoxLayou
 from mainWindow.mainCntl import MainController
 from settingWindow.settingCntl import SettingController
 from processWindow.downloadMainCntl import DownloadMainWindowUI, ShowImageWindow
+from finishWindow.finishUI import FinishImageWindow
 from stackCntrl.stackCntrl import StackCntrl
 
 
@@ -51,6 +52,10 @@ class AppHandler(QMainWindow):
         return widget_instance
 
 
+    def start_process_image(self):
+        widget_instance = self.add_item_to_stack("Обработка изображения", FinishImageWindow)
+        widget_instance.come_back_download_menu.connect(self.show_download_window)
+
     def show_image_window(self, file_path):
         self.setWindowTitle("Обработка изображения")
         StackCntrl.clear_stacked_widget(self.stack)  # Очищаем стек перед добавлением нового виджета
@@ -60,7 +65,7 @@ class AppHandler(QMainWindow):
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back.connect(self.show_download_window)
-
+        widget_instance.go_to_processing.connect(self.start_process_image)
         # Подключаем кнопку возврата, если это не главное окно
         # if class_name is MainController:
         #     widget_instance.setting_btn.clicked.connect(self.show_settings_window)

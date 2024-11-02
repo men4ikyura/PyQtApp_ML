@@ -33,14 +33,17 @@ from PyQt6.QtCore import pyqtSignal
 class ShowImageWindow(QWidget):
     
     come_back = pyqtSignal()
+    go_to_processing = pyqtSignal()
+
       # Измените здесь на QWidget
     def __init__(self, file_path):
         super().__init__()
         self.file_label = QLabel(self)
         self.come_back_to_download_menu_btn = QPushButton("Выбрать другой файл") # Подключаем кнопку "Назад"
-        self.start_process_image = QPushButton("Начать обработку изображения") # Подключаем кнопку "Назад"
+        self.start_process_image_btn = QPushButton("Начать обработку изображения") # Подключаем кнопку "Назад"
         self.setup_before_process_image_ui(file_path)
         self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_signal)
+        self.start_process_image_btn.clicked.connect(self.emit_go_to_processing)
 
     def setup_before_process_image_ui(self, file_path):
         if file_path:
@@ -54,10 +57,13 @@ class ShowImageWindow(QWidget):
             layout2.addWidget(self.file_label)
             layout2.addWidget(image_label)
             layout2.addWidget(self.come_back_to_download_menu_btn)
-            layout2.addWidget(self.start_process_image)
+            layout2.addWidget(self.start_process_image_btn)
 
             self.setLayout(layout2)  # Устанавливаем layout для текущего виджета
             self.resize(400, 400) 
 
     def emit_come_back_signal(self):
         self.come_back.emit() 
+
+    def emit_go_to_processing(self):
+        self.go_to_processing.emit() 
