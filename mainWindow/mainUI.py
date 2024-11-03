@@ -1,12 +1,9 @@
-from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QWidget, QLabel
+from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QWidget, QLabel, QMainWindow
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow
-from PyQt6.QtCore import pyqtSignal
 
 
 class MainUI(QMainWindow):
 
-    come_back = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -34,7 +31,3 @@ class MainUI(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(self.layout_main)
         self.setCentralWidget(central_widget)
-        
-
-    def emit_come_back_signal(self):
-        self.come_back.emit() 
