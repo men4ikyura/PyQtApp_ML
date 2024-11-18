@@ -11,7 +11,6 @@ class DownloadMainWindowUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
-       
         self.come_back_main_menu_btn = QPushButton("Назад")
         self.open_file_button = QPushButton("Выбрать файл", self)
         self.open_file_button.setGeometry(150, 80, 100, 30)

@@ -43,8 +43,11 @@ class ProcessingWindow(QWidget):
         self.dot_count = (self.dot_count + 1) % 4
 
     def run(self):
+        
         result = get_process_result(self.file_path)
+        new class = Data(coord)
         self.result_ready.emit(result)
+
 
     def handle_result(self, result):
         print("Результат готов:", result)
