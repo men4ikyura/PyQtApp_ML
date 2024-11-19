@@ -35,33 +35,26 @@ class AppHandler(QMainWindow):
         
     def show_download_window(self):
         """Показывает окно загрузки."""
-        widget_instance = self.add_item_to_stack("Загрузочное меню", DownloadMainWindowUI)
+        widget_instance = DownloadMainWindowUI()  
+        self.resize(widget_instance.sizeHint())
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back.connect(self.show_main_window)
         widget_instance.file_selected.connect(self.show_image_window)
 
 
-    def add_item_to_stack(self, title, class_name):
-        """Добавляет новый виджет в QStackedWidget и устанавливает его как текущий."""
-        self.setWindowTitle(title)
-        StackCntrl.clear_stacked_widget(self.stack)  # Очищаем стек перед добавлением нового виджета
-
-        # Создаем экземпляр переданного класса
-        widget_instance = class_name()  
+    def show_processing_window(self, file_path):
+        widget_instance = ProcessingWindow(file_path)  
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
-
-        return widget_instance
-
-
-    def show_processing_window(self, file_path):
-            widget_instance = ProcessingWindow(file_path)  
-            self.stack.addWidget(widget_instance)
-            self.stack.setCurrentWidget(widget_instance)
-            widget_instance.result_ready.connect(self.stop_process_image)
+        widget_instance.result_ready.connect(self.stop_process_image)
 
 
-    def stop_process_image(self):
-        widget_instance = self.add_item_to_stack("Обработка изображения", FinishImageWindow)
+    def stop_process_image(self, info_drops, file_path):
+        widget_instance = FinishImageWindow(info_drops, file_path)  
+        self.resize(widget_instance.sizeHint())
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back_download_menu.connect(self.show_download_window)
 
 
@@ -69,13 +62,26 @@ class AppHandler(QMainWindow):
         self.setWindowTitle("Обработка изображения")
         StackCntrl.clear_stacked_widget(self.stack)
 
-        widget_instance = ShowImageWindow(file_path)  
+        widget_instance = ShowImageWindow(file_path)
+         
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back.connect(self.show_download_window)
         widget_instance.go_to_processing.connect(self.show_processing_window)
         
        
+    def add_item_to_stack(self, title, class_name):
+        """Добавляет новый виджет в QStackedWidget и устанавливает его как текущий."""
+        self.setWindowTitle(title)
+        StackCntrl.clear_stacked_widget(self.stack)  # Очищаем стек перед добавлением нового виджета
+
+        widget_instance = class_name()  
+         
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
+
+        return widget_instance
+
 
     
       

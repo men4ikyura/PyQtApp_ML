@@ -1,12 +1,12 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QThread
-from test import get_process_result
-import time
+from methods import main
+
 
 class ProcessingWindow(QWidget):
     
     come_back_download_menu = pyqtSignal()
-    result_ready = pyqtSignal(dict)
+    result_ready = pyqtSignal(list, str)
 
     def __init__(self, file_path):
         super().__init__()
@@ -43,15 +43,11 @@ class ProcessingWindow(QWidget):
         self.dot_count = (self.dot_count + 1) % 4
 
     def run(self):
-        
-        result = get_process_result(self.file_path)
-        new class = Data(coord)
-        self.result_ready.emit(result)
+        result = main(self.file_path)
+        self.result_ready.emit(result,  self.file_path)
 
 
-    def handle_result(self, result):
-        print("Результат готов:", result)
-        
+    def handle_result(self):  
         # Остановка таймера и завершение потока
         self.timer.stop()
         self.thread.quit()

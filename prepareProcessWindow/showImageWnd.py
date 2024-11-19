@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QSize
 
 
 class ShowImageWindow(QWidget):
@@ -37,8 +37,12 @@ class ShowImageWindow(QWidget):
             layout2.addWidget(self.start_process_image_btn)
 
             self.setLayout(layout2) 
-            self.resize(400, 400) 
+            self.resize(600, 600) 
 
+    def sizeHint(self):
+        # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)
+        return QSize(self.width(), self.height())
+    
     def emit_file_path_signal(self):
         self.file_path_signal.emit(self.file_path)
 

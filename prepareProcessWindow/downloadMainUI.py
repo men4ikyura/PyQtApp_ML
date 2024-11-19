@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QMainWindow, QFileDialog
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, QSize
 
 
 
@@ -19,7 +19,11 @@ class DownloadMainWindowUI(QMainWindow):
         self.setup_start_downaload_ui()
         self.connect_signals()
         self.file_path = None
+        self.resize(600, 600)
         
+    def sizeHint(self):
+        # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)
+        return QSize(self.width(), self.height())
     
     def connect_signals(self):
         self.open_file_button.clicked.connect(self.open_file)
