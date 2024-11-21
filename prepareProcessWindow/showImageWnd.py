@@ -37,7 +37,7 @@ class ShowImageWindow(QWidget):
             layout2.addWidget(self.start_process_image_btn)
 
             self.setLayout(layout2) 
-            self.resize(600, 600) 
+            self.resize(600, 400) 
 
     def sizeHint(self):
         # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)

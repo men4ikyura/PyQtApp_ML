@@ -1,5 +1,4 @@
 from mainWindow.mainUI import MainUI
-from PyQt6.QtWidgets import QMainWindow
 
 class MainController(MainUI):
     def __init__(self):

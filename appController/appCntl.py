@@ -6,7 +6,7 @@ from prepareProcessWindow.showImageWnd import ShowImageWindow
 from processWindow.waitProcessUI import ProcessingWindow
 from finishWindow.finishUI import FinishImageWindow
 from stackCntrl.stackCntrl import StackCntrl
-
+from historyWindow.historyUI import HistoryUI
 
 class AppHandler(QMainWindow):
     
@@ -14,10 +14,8 @@ class AppHandler(QMainWindow):
         super().__init__()
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
-        self.resize(600, 600)
-
-        # Показываем главное окно при инициализации приложения
-        self.show_main_window()
+        self.resize(600, 400)
+        self.show_download_window()
 
     
     def show_main_window(self):
@@ -25,6 +23,13 @@ class AppHandler(QMainWindow):
         widget_instance = self.add_item_to_stack("Главное меню", MainController)
         widget_instance.setting_btn.clicked.connect(self.show_settings_window)
         widget_instance.download_btn.clicked.connect(self.show_download_window)
+        widget_instance.show_hst_btn.clicked.connect(self.show_history_window)
+
+    
+    def show_history_window(self):
+        """Показывает окно истории обработак."""
+        widget_instance = self.add_item_to_stack("История обработок", HistoryUI)
+        widget_instance.come_back.connect(self.show_main_window)
 
 
     def show_settings_window(self):
@@ -35,7 +40,8 @@ class AppHandler(QMainWindow):
         
     def show_download_window(self):
         """Показывает окно загрузки."""
-        widget_instance = DownloadMainWindowUI()  
+        widget_instance = DownloadMainWindowUI()
+        self.setWindowTitle("Загрузочное меню")
         self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
@@ -44,14 +50,18 @@ class AppHandler(QMainWindow):
 
 
     def show_processing_window(self, file_path):
-        widget_instance = ProcessingWindow(file_path)  
+        widget_instance = ProcessingWindow(file_path)
+        self.setWindowTitle("Обработка изображения")
+        self.resize(widget_instance.sizeHint())  
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         widget_instance.result_ready.connect(self.stop_process_image)
+        widget_instance.come_back_show_image.connect(self.show_image_window)
 
 
     def stop_process_image(self, info_drops, file_path):
-        widget_instance = FinishImageWindow(info_drops, file_path)  
+        widget_instance = FinishImageWindow(info_drops, file_path)
+        self.setWindowTitle("Результаты обработки")  
         self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
@@ -59,11 +69,11 @@ class AppHandler(QMainWindow):
 
 
     def show_image_window(self, file_path):
-        self.setWindowTitle("Обработка изображения")
+        self.setWindowTitle("Загрузочное меню")
         StackCntrl.clear_stacked_widget(self.stack)
 
         widget_instance = ShowImageWindow(file_path)
-         
+        self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back.connect(self.show_download_window)

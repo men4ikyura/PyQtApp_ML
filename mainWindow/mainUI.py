@@ -16,7 +16,7 @@ class MainUI(QMainWindow):
         
     def setup_main_ui(self):
         self.setWindowTitle("Главная страница")
-        title = QLabel("здарова это приложение команды восход загружаете")
+        title = QLabel("Приложение \"Voshod\"для подсчета капель на изображении\nс помощью технологии YOLOv8.\nЗагрузите изображение в формате jpg, png.\nДалее после обработки вам будет доступна такая информация как,\nколичесвто капель, график распределения площадей, координат центров.\nТакже будет возможность сохранить результаты в csv файл.")
         self.download_btn.setFixedSize(300, 30)
         self.setting_btn.setFixedSize(300, 30)
         self.show_hst_btn.setFixedSize(300, 30)

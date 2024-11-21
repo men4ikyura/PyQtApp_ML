@@ -1,12 +1,12 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QThread
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox
+from PyQt6.QtCore import Qt, pyqtSignal, QThread, QTimer
 from methods import main
+from PyQt6.QtCore import QObject, pyqtSignal, QSize
 
 
 class ProcessingWindow(QWidget):
-    
-    come_back_download_menu = pyqtSignal()
     result_ready = pyqtSignal(list, str)
+    come_back_show_image = pyqtSignal(str)
 
     def __init__(self, file_path):
         super().__init__()
@@ -14,41 +14,62 @@ class ProcessingWindow(QWidget):
         self.file_path = file_path
         self.setWindowTitle("Обработка изображения")
         self.main_layout = QVBoxLayout()
-        self.title_label = QLabel()
-        self.title_label.setStyleSheet("font-size: 24px; font-weight: bold; text-align: center;")
+        self.title_label = QLabel("Идёт обработка изображения, пожалуйста, подождите...")
+        self.title_label.setStyleSheet("font-size: 18px; font-weight: bold; text-align: center;")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.main_layout.addWidget(self.title_label)
+        self.resize(600, 400)
+
         self.setLayout(self.main_layout)
 
-        self.dot_count = 0
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_text)
-        
-        # Настройка потока
+        self.thread = None
+        self.worker = None
+
+    def sizeHint(self):
+        # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)
+        return QSize(self.width(), self.height())
+    
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.setup_thread()
+
+    def setup_thread(self):
         self.thread = QThread()
-        self.moveToThread(self.thread)
-        self.result_ready.connect(self.handle_result)
-        self.thread.started.connect(self.run)
-
-        # Запуск таймера и потока
-        self.timer.start(1000)
+        self.worker = Worker(self.file_path)  
+        self.worker.moveToThread(self.thread)
+        self.worker.error_call.connect(self.show_mistake)
+        self.thread.started.connect(self.worker.run)
+        self.worker.result_ready.connect(self.result_ready)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
-
-    def update_text(self):
-        # Обновляем текст метки с добавлением точек
-        text = f"Обработка изображения{'.' * self.dot_count}"
-        self.title_label.setText(text)
+       
+    def show_mistake(self):
+        self.come_back_show_image.emit(self.file_path)
+        QMessageBox.information(self, "Erorr", "Ошибка обработки, попробуй-те поменять параметры")
         
-        # Увеличиваем количество точек или сбрасываем
-        self.dot_count = (self.dot_count + 1) % 4
+
+
+class Worker(QObject):
+    result_ready = pyqtSignal(list, str)
+    finished = pyqtSignal()
+    error_call = pyqtSignal()
+
+
+    def __init__(self, file_path):
+        super().__init__()
+        self.file_path = file_path
 
     def run(self):
-        result = main(self.file_path)
-        self.result_ready.emit(result,  self.file_path)
+        
+        try: 
+            result = main(self.file_path)
+            self.result_ready.emit(result, self.file_path)   
+        except:
+            self.error_call.emit()
+        finally:
+            self.finished.emit()
 
 
-    def handle_result(self):  
-        # Остановка таймера и завершение потока
-        self.timer.stop()
-        self.thread.quit()
-        self.thread.wait()
+        
