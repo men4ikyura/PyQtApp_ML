@@ -107,8 +107,9 @@ class FinishImageWindow(QWidget):
 
 
     def show_input_dialog(self):
+        results_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))), 'results')
+        os.makedirs(results_folder, exist_ok=True)
         text, ok = QInputDialog.getText(None, "Введите имя файла", "Имя файла:")
-        results_folder = os.path.join(os.getcwd(), "results")
         
         if ok:
             if text != '':

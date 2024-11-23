@@ -8,4 +8,4 @@ if __name__=="__main__":
     main_window = AppHandler()
     main_window.show() 
     app.exec()
- 
+

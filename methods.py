@@ -2,12 +2,12 @@ from ultralytics import YOLO
 from PIL import Image
 from shapely.geometry import Polygon
 import numpy as np
+import os
 
 
 # завернул все в один метод
-def main(image_path,model_path='best.pt',conf=0.5,iou=0.5,imgsz=640):
-
-    
+def main(image_path,conf=0.5,iou=0.5,imgsz=640):
+    model_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), 'best.pt')
     # загружаем модель
     model=YOLO(model_path)
 
