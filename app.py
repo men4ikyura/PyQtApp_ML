@@ -9,3 +9,4 @@ if __name__=="__main__":
     main_window.show() 
     app.exec()
 
+#pyinstaller -w --icon=icon.ico --name=Voshod app.py

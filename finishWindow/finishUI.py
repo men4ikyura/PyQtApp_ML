@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox, QInputDialog
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout,  QPushButton, QLabel, QMessageBox, QInputDialog
 from PyQt6.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QGuiApplication
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize
 from PIL import Image
@@ -13,61 +13,68 @@ class FinishImageWindow(QWidget):
 
     def __init__(self, info_drops, file_path):
         super().__init__()
-        self.info_drops = info_drops
-        self.file_path = file_path
-        main_layout = QVBoxLayout() 
+        hz_layout = QHBoxLayout() 
+        vr_layout = QVBoxLayout()
+        vr_layout.setContentsMargins(0, 0, 0, 0)
+        vr_layout.setSpacing(0)
+        hz_layout.setContentsMargins(0, 0, 0, 0)
+        hz_layout.setSpacing(4)
         count_drops = QLabel(self)
-        count_drops.setText(f"Количество капель: {self.info_drops[0]}")
+        count_drops.setText(f"Количество капель: {info_drops[0]}")
         self.saving_btn = QPushButton("Сохранить в файл")
         self.saving_btn.clicked.connect(self.show_input_dialog)
         self.file_name_entered.connect(self.save_info_in_file)
         self.come_back_to_download_menu_btn = QPushButton("Назад в меню загрузки")
         self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_download_menu)
-        self.come_back_to_download_menu_btn.setFixedSize(300, 30)
-        self.saving_btn.setFixedSize(300, 30)
-        main_layout.addWidget(count_drops, alignment=Qt.AlignmentFlag.AlignCenter)
-        main_layout.addWidget(self.come_back_to_download_menu_btn,  alignment=Qt.AlignmentFlag.AlignCenter)
-        main_layout.addWidget(self.saving_btn,  alignment=Qt.AlignmentFlag.AlignCenter)
-        self.setLayout(main_layout)  
-        self.width_file, self.height_file, self.koef = self.count_sizes()
-        self.width_window, self.height_window = self.width_file, self.height_file
-        
+        self.come_back_to_download_menu_btn.setFixedSize(250, 30)
+        self.saving_btn.setFixedSize(250, 30)
+        self.paint_widget = QWidget(self)
+        count_drops.setContentsMargins(5, 0, 0, 0)
+        hz_layout.addWidget(count_drops)
+        hz_layout.addWidget(self.come_back_to_download_menu_btn)
+        hz_layout.addWidget(self.saving_btn)
+        vr_layout.addLayout(hz_layout)
+        width_file, height_file, koef = self.count_sizes(file_path)
+        self.width_window, self.height_window = width_file, height_file + 50
+        custom_widget = CustomPaintWidget(file_path, info_drops, koef, width_file, height_file)
+        vr_layout.addWidget(custom_widget)
+        self.setLayout(vr_layout)
 
+    
     def sizeHint(self):
-        # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)
         return QSize(self.width_window, self.height_window)
 
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        pixmap = QPixmap(self.file_path)
-        scaled_pixmap = pixmap.scaled(self.width_file, self.height_file, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        painter.drawPixmap(0, 0, scaled_pixmap)
+    
+    # def paintEvent(self, event):
+    #     painter = QPainter(self)
+    #     pixmap = QPixmap(self.file_path)
+    #     scaled_pixmap = pixmap.scaled(self.width_file, self.height_file, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+    #     painter.drawPixmap(0, 0, scaled_pixmap)
         
 
-        pen_line = QPen()
-        pen_line.setWidth(3)
-        pen_line.setColor(QColor(0, 128, 255))  # Синий цвет для полилинии
-        painter.setPen(pen_line)
+    #     pen_line = QPen()
+    #     pen_line.setWidth(3)
+    #     pen_line.setColor(QColor(0, 128, 255))  # Синий цвет для полилинии
+    #     painter.setPen(pen_line)
 
-        # Рисуем полилинию
-        if self.info_drops[0] != 0:
-            for info in self.info_drops[1]:
-                masks = []
+    #     # Рисуем полилинию
+    #     if self.info_drops[0] != 0:
+    #         for info in self.info_drops[1]:
+    #             masks = []
 
-                for coordinate in info[0]:
-                    masks.append(QPoint(int(coordinate[0] * self.koef), int(coordinate[1] * self.koef)))
-                masks.append(QPoint(int(info[0][0][0] * self.koef), int(info[0][0][1] * self.koef)))
-                center = QPoint(int(info[2][0] * self.koef), int(info[2][1] * self.koef))
-                painter.drawEllipse(center, 2, 2)
-                # Рисуем полилинию
-                polygon = QPolygon(masks)
-                painter.drawPolyline(polygon)
+    #             for coordinate in info[0]:
+    #                 masks.append(QPoint(int(coordinate[0] * self.koef), int(coordinate[1] * self.koef)))
+    #             masks.append(QPoint(int(info[0][0][0] * self.koef), int(info[0][0][1] * self.koef)))
+    #             center = QPoint(int(info[2][0] * self.koef), int(info[2][1] * self.koef))
+    #             painter.drawEllipse(center, 2, 2)
+    #             # Рисуем полилинию
+    #             polygon = QPolygon(masks)
+    #             painter.drawPolyline(polygon)
 
-        painter.end()
+    #     painter.end()
 
 
-    def count_sizes(self):
+    def count_sizes(self, file_path):
         screen = QGuiApplication.primaryScreen()
 
         # Получение размеров экрана
@@ -75,7 +82,7 @@ class FinishImageWindow(QWidget):
         width_screen = screen_size.width() - 500
         height_screen = screen_size.height() - 300
 
-        with Image.open(self.file_path) as img:
+        with Image.open(file_path) as img:
             width_file, height_file = img.size 
 
         less_width = width_file <= width_screen 
@@ -124,3 +131,44 @@ class FinishImageWindow(QWidget):
         
     def emit_come_back_download_menu(self):
         self.come_back_download_menu.emit()
+
+
+class CustomPaintWidget(QWidget):
+    def __init__(self, file_path, info_drops, koef, width_file, height_file):
+        super().__init__()
+        self.file_path = file_path
+        self.info_drops = info_drops
+        self.koef = koef
+        self.width_file = width_file
+        self.height_file = height_file
+        # self.setMinimumSize(self.width_file, self.height_file)
+
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        pixmap = QPixmap(self.file_path)
+        scaled_pixmap = pixmap.scaled(
+            self.width_file, 
+            self.height_file, 
+            Qt.AspectRatioMode.KeepAspectRatio, 
+            Qt.TransformationMode.SmoothTransformation
+        )
+        painter.drawPixmap(0, 0, scaled_pixmap)
+
+        pen_line = QPen()
+        pen_line.setWidth(3)
+        pen_line.setColor(QColor(0, 128, 255))  # Синий цвет для полилинии
+        painter.setPen(pen_line)
+
+        if self.info_drops[0] != 0:
+            for info in self.info_drops[1]:
+                masks = []
+                for coordinate in info[0]:
+                    masks.append(QPoint(int(coordinate[0] * self.koef), int(coordinate[1] * self.koef)))
+                masks.append(QPoint(int(info[0][0][0] * self.koef), int(info[0][0][1] * self.koef)))
+                center = QPoint(int(info[2][0] * self.koef), int(info[2][1] * self.koef))
+                painter.drawEllipse(center, 2, 2)
+                polygon = QPolygon(masks)
+                painter.drawPolyline(polygon)
+
+        painter.end()

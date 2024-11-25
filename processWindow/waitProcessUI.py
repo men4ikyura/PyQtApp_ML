@@ -1,17 +1,17 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox
-from PyQt6.QtCore import Qt, pyqtSignal, QThread, QTimer
+from PyQt6.QtCore import Qt, pyqtSignal, QThread
 from methods import main
 from PyQt6.QtCore import QObject, pyqtSignal, QSize
 
 
 class ProcessingWindow(QWidget):
     result_ready = pyqtSignal(list, str)
-    come_back_show_image = pyqtSignal(str)
+    come_back_show_image = pyqtSignal(str, float, float, bool, int)
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, *args):
         super().__init__()
-
         self.file_path = file_path
+        self.args = args
         self.setWindowTitle("Обработка изображения")
         self.main_layout = QVBoxLayout()
         self.title_label = QLabel("Идёт обработка изображения, пожалуйста, подождите...")
@@ -35,7 +35,7 @@ class ProcessingWindow(QWidget):
 
     def setup_thread(self):
         self.thread = QThread()
-        self.worker = Worker(self.file_path)  
+        self.worker = Worker(self.file_path, self.args)  
         self.worker.moveToThread(self.thread)
         self.worker.error_call.connect(self.show_mistake)
         self.thread.started.connect(self.worker.run)
@@ -46,7 +46,7 @@ class ProcessingWindow(QWidget):
         self.thread.start()
        
     def show_mistake(self):
-        self.come_back_show_image.emit(self.file_path)
+        self.come_back_show_image.emit(self.file_path, *self.args)
         QMessageBox.information(self, "Erorr", "Ошибка обработки, попробуй-те поменять параметры")
         
 
@@ -57,14 +57,15 @@ class Worker(QObject):
     error_call = pyqtSignal()
 
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, args):
         super().__init__()
         self.file_path = file_path
+        self.args = args
+      
 
     def run(self):
-        
         try: 
-            result = main(self.file_path)
+            result = main(self.file_path, *self.args)
             self.result_ready.emit(result, self.file_path)   
         except:
             self.error_call.emit()

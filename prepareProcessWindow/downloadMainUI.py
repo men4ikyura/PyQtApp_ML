@@ -19,17 +19,12 @@ class DownloadMainWindowUI(QMainWindow):
         self.connect_signals()
         self.file_path = None
         self.resize(600, 400)
-        self.save_in_txt()
+
 
     def sizeHint(self):
         # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)
         return QSize(self.width(), self.height())
     
-    def save_in_txt(self):
-            # Ваш код сохранения данных
-        with open("/Users/yurazhilin/Desktop/pyQtApp/1.txt", 'w') as file:
-            file.write(f"{os.path.dirname(os.path.abspath(__file__))}")
-
 
     def connect_signals(self):
         self.open_file_button.clicked.connect(self.open_file)

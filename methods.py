@@ -6,11 +6,11 @@ import os
 
 
 # завернул все в один метод
-def main(image_path,conf=0.5,iou=0.5,imgsz=640):
-    model_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), 'best.pt')
+def main(image_path, conf, iou, retina_masks, imgsz):
+    
+    model_path = 'best.pt'
     # загружаем модель
     model=YOLO(model_path)
-
 
     # картинку загружаем, модуль Image из библиотеки PIL
     image = Image.open(image_path)
@@ -18,7 +18,7 @@ def main(image_path,conf=0.5,iou=0.5,imgsz=640):
 
     # загружаем картинку в модель, imgsz = 640, еще есть параметр conf - тип float от 0 до 1 включительно, 
     # это уверенность модели что обьект соотвествует и его надо выделять
-    result=model(image,imgsz=imgsz,conf=conf,iou=iou,max_det = 2500,retina_masks=True)
+    result=model(image,imgsz=imgsz,conf=conf,iou=iou,retina_masks=retina_masks,max_det = 2500)
 
 
     # # берем маски из обьекта result, xy - значит что координаты не нормамированные 

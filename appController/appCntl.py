@@ -15,7 +15,7 @@ class AppHandler(QMainWindow):
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
         self.resize(600, 400)
-        self.show_download_window()
+        self.show_main_window()
 
     
     def show_main_window(self):
@@ -40,6 +40,7 @@ class AppHandler(QMainWindow):
         
     def show_download_window(self):
         """Показывает окно загрузки."""
+        StackCntrl.clear_stacked_widget(self.stack)
         widget_instance = DownloadMainWindowUI()
         self.setWindowTitle("Загрузочное меню")
         self.resize(widget_instance.sizeHint())
@@ -49,8 +50,9 @@ class AppHandler(QMainWindow):
         widget_instance.file_selected.connect(self.show_image_window)
 
 
-    def show_processing_window(self, file_path):
-        widget_instance = ProcessingWindow(file_path)
+    def show_processing_window(self, file_path, *args):
+        StackCntrl.clear_stacked_widget(self.stack)
+        widget_instance = ProcessingWindow(file_path, *args)
         self.setWindowTitle("Обработка изображения")
         self.resize(widget_instance.sizeHint())  
         self.stack.addWidget(widget_instance)
@@ -68,11 +70,10 @@ class AppHandler(QMainWindow):
         widget_instance.come_back_download_menu.connect(self.show_download_window)
 
 
-    def show_image_window(self, file_path):
+    def show_image_window(self, file_path, *args):
         self.setWindowTitle("Загрузочное меню")
         StackCntrl.clear_stacked_widget(self.stack)
-
-        widget_instance = ShowImageWindow(file_path)
+        widget_instance = ShowImageWindow(file_path, *args)
         self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
