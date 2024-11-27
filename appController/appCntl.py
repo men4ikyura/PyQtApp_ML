@@ -5,6 +5,7 @@ from prepareProcessWindow.downloadMainUI import DownloadMainWindowUI
 from prepareProcessWindow.showImageWnd import ShowImageWindow
 from processWindow.waitProcessUI import ProcessingWindow
 from finishWindow.finishUI import FinishImageWindow
+from finishWindow.finishGraphic import GraphicsDraw
 from stackCntrl.stackCntrl import StackCntrl
 from historyWindow.historyUI import HistoryUI
 
@@ -26,6 +27,17 @@ class AppHandler(QMainWindow):
         widget_instance.show_hst_btn.clicked.connect(self.show_history_window)
 
     
+    def show_finish_graphics(self, info_drops):
+        StackCntrl.clear_stacked_widget(self.stack)
+        widget_instance = GraphicsDraw(info_drops)
+        self.setWindowTitle("График")
+        # self.resize(widget_instance.sizeHint())
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
+        widget_instance.come_back_download_menu.connect(self.show_download_window)
+        # widget_instance.file_selected.connect(self.show_image_window)
+
+
     def show_history_window(self):
         """Показывает окно истории обработак."""
         widget_instance = self.add_item_to_stack("История обработок", HistoryUI)
@@ -68,6 +80,8 @@ class AppHandler(QMainWindow):
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back_download_menu.connect(self.show_download_window)
+        widget_instance.get_data_to_graphics.connect(self.show_finish_graphics)
+
 
 
     def show_image_window(self, file_path, *args):

@@ -10,34 +10,40 @@ class FinishImageWindow(QWidget):
     
     come_back_download_menu = pyqtSignal()
     file_name_entered = pyqtSignal(str)
+    get_data_to_graphics =  pyqtSignal(list)
+
 
     def __init__(self, info_drops, file_path):
         super().__init__()
-        hz_layout = QHBoxLayout() 
+        self.info_drops = info_drops
+        
         vr_layout = QVBoxLayout()
         vr_layout.setContentsMargins(0, 0, 0, 0)
         vr_layout.setSpacing(0)
+        hz_layout = QHBoxLayout() 
         hz_layout.setContentsMargins(0, 0, 0, 0)
         hz_layout.setSpacing(4)
         count_drops = QLabel(self)
-        count_drops.setText(f"Количество капель: {info_drops[0]}")
-        self.saving_btn = QPushButton("Сохранить в файл")
-        self.saving_btn.clicked.connect(self.show_input_dialog)
-        self.file_name_entered.connect(self.save_info_in_file)
+        count_drops.setText(f"Количество капель: {self.info_drops[0]}")
+        count_drops.setContentsMargins(5, 0, 0, 0)
+        hz_layout.addWidget(count_drops)
+        
         self.come_back_to_download_menu_btn = QPushButton("Назад в меню загрузки")
         self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_download_menu)
         self.come_back_to_download_menu_btn.setFixedSize(250, 30)
-        self.saving_btn.setFixedSize(250, 30)
-        self.paint_widget = QWidget(self)
-        count_drops.setContentsMargins(5, 0, 0, 0)
-        hz_layout.addWidget(count_drops)
         hz_layout.addWidget(self.come_back_to_download_menu_btn)
-        hz_layout.addWidget(self.saving_btn)
-        vr_layout.addLayout(hz_layout)
+        self.paint_widget = QWidget(self)
+        self.come_back_to_graphics = QPushButton("График")
+        self.come_back_to_graphics.clicked.connect(self.emit_graphic_data)
+        self.come_back_to_graphics.setFixedSize(250, 30)
+        hz_layout.addWidget(self.come_back_to_graphics)
         width_file, height_file, koef = self.count_sizes(file_path)
         self.width_window, self.height_window = width_file, height_file + 50
         custom_widget = CustomPaintWidget(file_path, info_drops, koef, width_file, height_file)
+        
+        vr_layout.addWidget(count_drops)
         vr_layout.addWidget(custom_widget)
+        
         self.setLayout(vr_layout)
 
     
@@ -45,6 +51,9 @@ class FinishImageWindow(QWidget):
         return QSize(self.width_window, self.height_window)
 
     
+    def emit_graphic_data(self):
+        self.get_data_to_graphics.emit(self.info_drops)
+
     # def paintEvent(self, event):
     #     painter = QPainter(self)
     #     pixmap = QPixmap(self.file_path)
@@ -104,29 +113,30 @@ class FinishImageWindow(QWidget):
         return new_width_file, new_height_file, koef
 
 
-    def save_info_in_file(self, path):
-        with open(path, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(["area", "coordinate center x", "coordinate center y"])
-            for row in self.info_drops[1]:
-                writer.writerow([coordinate for coordinate in row[2]] + [row[1]])
-        QMessageBox.information(self, "Файл успешно создан", "Результаты обработки записаны в файл")
+    # def save_info_in_file(self, path):
+    #     with open(path, 'w', newline='') as file:
+    #         writer = csv.writer(file)
+    #         writer.writerow(["area", "coordinate center x", "coordinate center y"])
+    #         for row in self.info_drops[1]:
+    #             writer.writerow([coordinate for coordinate in row[2]] + [row[1]])
+    #     QMessageBox.information(self, "Файл успешно создан", "Результаты обработки записаны в файл")
 
 
-    def show_input_dialog(self):
-        results_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))), 'results')
-        os.makedirs(results_folder, exist_ok=True)
-        text, ok = QInputDialog.getText(None, "Введите имя файла", "Имя файла:")
+    # def show_input_dialog(self):
+    #     # results_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))), 'results')
+    #     # os.makedirs(results_folder, exist_ok=True)
+    #     results_folder = '/Users/yurazhilin/Desktop/pyQtApp'
+    #     text, ok = QInputDialog.getText(None, "Введите имя файла", "Имя файла:")
         
-        if ok:
-            if text != '':
-                path = os.path.join(results_folder, f"{text}.csv")
-                if not os.path.exists(path):
-                    self.file_name_entered.emit(path)
-                else:
-                    QMessageBox.information(self, "Файл с таким именем уже существует", "Файл с таким именем уже существует")
-            else:
-                self.file_name_entered.emit(os.path.join(results_folder, f"{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv"))
+    #     if ok:
+    #         if text != '':
+    #             path = os.path.join(results_folder, f"{text}.csv")
+    #             if not os.path.exists(path):
+    #                 self.file_name_entered.emit(path)
+    #             else:
+    #                 QMessageBox.information(self, "Файл с таким именем уже существует", "Файл с таким именем уже существует")
+    #         else:
+    #             self.file_name_entered.emit(os.path.join(results_folder, f"{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv"))
 
         
     def emit_come_back_download_menu(self):
