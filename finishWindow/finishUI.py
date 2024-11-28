@@ -2,9 +2,7 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout,  QPushButton, QLa
 from PyQt6.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QGuiApplication
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize
 from PIL import Image
-from datetime import datetime
-import csv
-import os
+
 
 class FinishImageWindow(QWidget):
     
@@ -16,34 +14,31 @@ class FinishImageWindow(QWidget):
     def __init__(self, info_drops, file_path):
         super().__init__()
         self.info_drops = info_drops
-        
+        hz_layout = QHBoxLayout() 
         vr_layout = QVBoxLayout()
         vr_layout.setContentsMargins(0, 0, 0, 0)
         vr_layout.setSpacing(0)
-        hz_layout = QHBoxLayout() 
         hz_layout.setContentsMargins(0, 0, 0, 0)
         hz_layout.setSpacing(4)
         count_drops = QLabel(self)
-        count_drops.setText(f"Количество капель: {self.info_drops[0]}")
-        count_drops.setContentsMargins(5, 0, 0, 0)
-        hz_layout.addWidget(count_drops)
-        
-        self.come_back_to_download_menu_btn = QPushButton("Назад в меню загрузки")
-        self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_download_menu)
-        self.come_back_to_download_menu_btn.setFixedSize(250, 30)
-        hz_layout.addWidget(self.come_back_to_download_menu_btn)
-        self.paint_widget = QWidget(self)
+        count_drops.setText(f"Количество капель: {info_drops[0]}")
         self.come_back_to_graphics = QPushButton("График")
         self.come_back_to_graphics.clicked.connect(self.emit_graphic_data)
+        self.come_back_to_graphics.clicked.connect(self.emit_graphic_data)
+        self.come_back_to_download_menu_btn = QPushButton("Назад в меню загрузки")
+        self.come_back_to_download_menu_btn.setFixedSize(250, 30)
+        self.come_back_to_download_menu_btn.clicked.connect(self.come_back_download_menu)
         self.come_back_to_graphics.setFixedSize(250, 30)
+        self.paint_widget = QWidget(self)
+        count_drops.setContentsMargins(5, 0, 0, 0)
+        hz_layout.addWidget(count_drops)
         hz_layout.addWidget(self.come_back_to_graphics)
+        hz_layout.addWidget(self.come_back_to_download_menu_btn)
+        vr_layout.addLayout(hz_layout)
         width_file, height_file, koef = self.count_sizes(file_path)
         self.width_window, self.height_window = width_file, height_file + 50
         custom_widget = CustomPaintWidget(file_path, info_drops, koef, width_file, height_file)
-        
-        vr_layout.addWidget(count_drops)
         vr_layout.addWidget(custom_widget)
-        
         self.setLayout(vr_layout)
 
     

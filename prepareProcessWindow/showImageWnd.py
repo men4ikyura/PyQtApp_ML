@@ -19,8 +19,6 @@ class ShowImageWindow(QWidget):
             self.args = (0.25, 0.70, True, 1280)
         else:
             self.args = args
-
-        print(self.args)
     
         self.come_back_to_download_menu_btn = QPushButton("Выбрать другой файл") 
         self.start_process_image_btn = QPushButton("Начать обработку изображения")
@@ -118,7 +116,6 @@ class ShowImageWindow(QWidget):
     
     # def emit_file_path_signal(self):
     #     self.file_path_signal.emit(self.file_path)
-
 
     def emit_come_back_signal(self):
         self.come_back.emit() 

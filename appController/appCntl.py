@@ -8,6 +8,7 @@ from finishWindow.finishUI import FinishImageWindow
 from finishWindow.finishGraphic import GraphicsDraw
 from stackCntrl.stackCntrl import StackCntrl
 from historyWindow.historyUI import HistoryUI
+from documentationWindow.documWnd import DocumentationUI
 
 class AppHandler(QMainWindow):
     
@@ -15,17 +16,31 @@ class AppHandler(QMainWindow):
         super().__init__()
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
-        self.resize(600, 400)
         self.show_main_window()
 
     
     def show_main_window(self):
         """Показывает главное окно приложения."""
-        widget_instance = self.add_item_to_stack("Главное меню", MainController)
+        StackCntrl.clear_stacked_widget(self.stack)
+        
+        widget_instance = MainController()
+        self.setWindowTitle("Главное меню")
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
+        self.resize(600,400)
         widget_instance.setting_btn.clicked.connect(self.show_settings_window)
         widget_instance.download_btn.clicked.connect(self.show_download_window)
         widget_instance.show_hst_btn.clicked.connect(self.show_history_window)
+        widget_instance.documentation_btn.clicked.connect(self.show_documentation_wnd)
 
+    def show_documentation_wnd(self):
+        StackCntrl.clear_stacked_widget(self.stack)
+        widget_instance = DocumentationUI()
+        self.setWindowTitle("Параметры модели")
+        # self.resize(widget_instance.sizeHint())
+        self.stack.addWidget(widget_instance)
+        self.stack.setCurrentWidget(widget_instance)
+        widget_instance.come_back_main_menu.connect(self.show_main_window)
     
     def show_finish_graphics(self, info_drops):
         StackCntrl.clear_stacked_widget(self.stack)

@@ -22,7 +22,7 @@ class HistoryUI(QMainWindow):
         self.come_back_main_menu_btn.setFixedSize(300, 30)
         layout = QVBoxLayout()
         title = QLabel("Это иcтория обработок")
-        info_title = QLabel("История нахоодится на стадии разработки")
+        info_title = QLabel("История находится на стадии разработки")
         layout.addWidget(title, alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(info_title, alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.come_back_main_menu_btn, alignment=Qt.AlignmentFlag.AlignCenter)

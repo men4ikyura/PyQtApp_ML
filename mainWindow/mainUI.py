@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QWidget, QLabel, QMainWindow
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize
 
 
 class MainUI(QMainWindow):
@@ -8,20 +8,23 @@ class MainUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.download_btn = QPushButton("Загрузить изображение")
+        self.documentation_btn = QPushButton("Документация")
         self.show_hst_btn = QPushButton("Показать историю результатов")
         self.setting_btn = QPushButton("Настройки приложения")
         self.layout_main = QVBoxLayout()
-       
+        self.resize(600,300)
 
-        
+    
     def setup_main_ui(self):
         self.setWindowTitle("Главная страница")
         title = QLabel("Приложение \"Voshod\"для подсчета капель на изображении\nс помощью технологии YOLOv8.\nЗагрузите изображение в формате jpg, png.\nДалее после обработки вам будет доступна такая информация как,\nколичесвто капель, график распределения площадей, координат центров.\nТакже будет возможность сохранить результаты в csv файл.")
         self.download_btn.setFixedSize(300, 30)
         self.setting_btn.setFixedSize(300, 30)
         self.show_hst_btn.setFixedSize(300, 30)
+        self.documentation_btn.setFixedSize(300, 30)
 
         self.layout_main.addWidget(self.download_btn, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.layout_main.addWidget(self.documentation_btn, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout_main.addWidget(self.show_hst_btn, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout_main.addWidget(self.setting_btn, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout_main.addSpacing(40)
