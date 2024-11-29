@@ -1,7 +1,9 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox
 from PyQt6.QtCore import Qt, pyqtSignal, QThread
-from methods import main
+from methods_new import main
 from PyQt6.QtCore import QObject, pyqtSignal, QSize
+from PIL import Image
+import tempfile
 
 
 class ProcessingWindow(QWidget):
@@ -26,7 +28,6 @@ class ProcessingWindow(QWidget):
         self.worker = None
 
     def sizeHint(self):
-        # Возвращает размер, основываясь на содержимом (в данном случае - 800x800)
         return QSize(self.width(), self.height())
     
     def showEvent(self, event):
@@ -65,12 +66,38 @@ class Worker(QObject):
 
     def run(self):
         try: 
-            result = main(self.file_path, *self.args)
-            self.result_ready.emit(result, self.file_path)   
+            path_formate_image = self.find_filled_areas(self.file_path)
+            print(path_formate_image)
+            result = main(path_formate_image, *self.args)
+            self.result_ready.emit(result, path_formate_image)   
         except:
             self.error_call.emit()
         finally:
             self.finished.emit()
 
 
+    def find_filled_areas(self, file_path):
+        with Image.open(file_path) as img:
+            # Преобразуем изображение в оттенки серого
+            gray_image = img.convert("L")
+
+            # Применяем пороговую фильтрацию, чтобы отделить заполненные области (например, значимые пиксели)
+            # Порог для выделения "заполненных" областей (чем выше, тем светлее пиксели)
+            threshold = 30 # константу сам подобрал на ориг фотках
+            bw_image = gray_image.point(lambda p: p > threshold and 255)
+
+            # Используем getbbox(), чтобы найти ограничивающую рамку заполненных областей
+            bbox = bw_image.getbbox()  # Возвращает кортеж (left, upper, right, lower)
+
+            if bbox:
+                # Обрезаем изображение по найденной рамке
+                gray_image = img.crop(bbox)
+
+            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
+                temp_file_path = temp_file.name  
+
+                # Сохраняем изображение во временный файл
+        
+                gray_image.save(temp_file_path)
+            return temp_file_path
         

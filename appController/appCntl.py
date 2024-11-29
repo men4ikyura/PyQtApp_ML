@@ -16,7 +16,7 @@ class AppHandler(QMainWindow):
         super().__init__()
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
-        self.show_main_window()
+        self.show_download_window()
 
     
     def show_main_window(self):

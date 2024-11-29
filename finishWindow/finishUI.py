@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout,  QPushButton, QLabel, QMessageBox, QInputDialog
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout,  QPushButton, QLabel
 from PyQt6.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QGuiApplication
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize
 from PIL import Image
-
+import os
 
 class FinishImageWindow(QWidget):
     
@@ -13,6 +13,7 @@ class FinishImageWindow(QWidget):
 
     def __init__(self, info_drops, file_path):
         super().__init__()
+        self.file_path = file_path
         self.info_drops = info_drops
         hz_layout = QHBoxLayout() 
         vr_layout = QVBoxLayout()
@@ -27,7 +28,7 @@ class FinishImageWindow(QWidget):
         self.come_back_to_graphics.clicked.connect(self.emit_graphic_data)
         self.come_back_to_download_menu_btn = QPushButton("Назад в меню загрузки")
         self.come_back_to_download_menu_btn.setFixedSize(250, 30)
-        self.come_back_to_download_menu_btn.clicked.connect(self.come_back_download_menu)
+        self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_download_menu)
         self.come_back_to_graphics.setFixedSize(250, 30)
         self.paint_widget = QWidget(self)
         count_drops.setContentsMargins(5, 0, 0, 0)
@@ -47,6 +48,7 @@ class FinishImageWindow(QWidget):
 
     
     def emit_graphic_data(self):
+        os.remove(self.file_path)
         self.get_data_to_graphics.emit(self.info_drops)
 
     # def paintEvent(self, event):
@@ -135,6 +137,8 @@ class FinishImageWindow(QWidget):
 
         
     def emit_come_back_download_menu(self):
+        print(self.file_path)
+        os.remove(self.file_path)
         self.come_back_download_menu.emit()
 
 
