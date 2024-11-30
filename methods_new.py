@@ -6,13 +6,13 @@ import os
 
 
 # завернул все в один метод
-def main(path_image, conf, iou, retina_masks, imgsz):
+def main(path_image, conf, iou, retina_masks, imgsz, multiplier_from_pixels_to_microns):
 
     # НОВЫЙ ПАРАМЕТР(количество пикселей в одном микроне) я его вынес сюда, нужно его вынести в приложение для пользователя
     # этот параметр задает отношение: сколько пикселей в одном микроне, нужен для пересчета диаметра капли из пикселей в микроны
     # тип - число с плавающей точкой больше нуля
     # значение по умолчанию 7.5
-    multiplier_from_pixels_to_microns = 7.5
+    # multiplier_from_pixels_to_microns = 7.5
 
     model_path = 'best.pt'
     # загружаем модель

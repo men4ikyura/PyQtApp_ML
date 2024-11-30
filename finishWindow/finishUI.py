@@ -15,6 +15,7 @@ class FinishImageWindow(QWidget):
         super().__init__()
         self.file_path = file_path
         self.info_drops = info_drops
+        
         hz_layout = QHBoxLayout() 
         vr_layout = QVBoxLayout()
         vr_layout.setContentsMargins(0, 0, 0, 0)
@@ -33,7 +34,8 @@ class FinishImageWindow(QWidget):
         self.paint_widget = QWidget(self)
         count_drops.setContentsMargins(5, 0, 0, 0)
         hz_layout.addWidget(count_drops)
-        hz_layout.addWidget(self.come_back_to_graphics)
+        if info_drops[0] != 0:
+            hz_layout.addWidget(self.come_back_to_graphics)
         hz_layout.addWidget(self.come_back_to_download_menu_btn)
         vr_layout.addLayout(hz_layout)
         width_file, height_file, koef = self.count_sizes(file_path)

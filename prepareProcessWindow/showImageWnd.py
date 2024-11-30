@@ -1,12 +1,12 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QSlider, QCheckBox, QLineEdit, QHBoxLayout
-from PyQt6.QtGui import QPixmap, QIntValidator
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
+from PyQt6.QtGui import QPixmap, QIntValidator, QDoubleValidator
+from PyQt6.QtCore import Qt, pyqtSignal, QSize, QLocale
 
 
 class ShowImageWindow(QWidget):
     
     come_back = pyqtSignal()
-    go_to_processing = pyqtSignal(str, float, float, bool, int)
+    go_to_processing = pyqtSignal(str, float, float, bool, int, float)
     file_path_signal = pyqtSignal(str)
 
 
@@ -16,13 +16,14 @@ class ShowImageWindow(QWidget):
         self.file_label = QLabel(self)
         
         if not args:
-            self.args = (0.25, 0.70, True, 1280)
+            self.args = (0.25, 0.70, True, 1280, 7.5)
         else:
             self.args = args
     
         self.come_back_to_download_menu_btn = QPushButton("Выбрать другой файл") 
         self.start_process_image_btn = QPushButton("Начать обработку изображения")
-        
+        locale = QLocale(QLocale.Language.English, QLocale.Country.UnitedStates)
+        QLocale.setDefault(locale)
         self.come_back_to_download_menu_btn.clicked.connect(self.emit_come_back_signal)
         self.start_process_image_btn.clicked.connect(self.emit_go_to_processing)
         self.layout2 = QVBoxLayout(self)
@@ -53,11 +54,24 @@ class ShowImageWindow(QWidget):
         self.label_imgsz = QLabel(self)
         self.label_imgsz.setText("imgsz")
         self.label_imgsz.setMaximumWidth(50)
-        self.line_edit = QLineEdit(self)
-        self.line_edit.setText(str(self.args[3]))
-        self.line_edit.setMaximumWidth(150)
+        self.line_edit_imgsz = QLineEdit(self)
+        self.line_edit_imgsz.setText(str(self.args[3]))
+        self.line_edit_imgsz.setMaximumWidth(150)
         validator = QIntValidator(0, 4000, self)  
-        self.line_edit.setValidator(validator)
+        self.line_edit_imgsz.setValidator(validator)
+
+        #выбор количесвто пикселей в микрометре
+        self.label_px = QLabel(self)
+        self.label_px.setText("Количесвто пикселей в микрометре")
+        self.label_px.setMaximumWidth(250)
+        self.line_edit_px = QLineEdit(self)
+        self.line_edit_px.setText(str(self.args[4]))
+        self.line_edit_px.setMaximumWidth(150)
+        validator = QDoubleValidator(0.0, 50.0, 2, self)
+        validator.setNotation(QDoubleValidator.Notation.StandardNotation)
+        validator.setRange(0.0, 50.0, 2)
+        self.line_edit_px.setValidator(validator)
+
 
 
         #выбор retina_masks
@@ -78,9 +92,14 @@ class ShowImageWindow(QWidget):
         self.layout2.addWidget(self.retina_masks_box)
         self.layout3 = QHBoxLayout() 
         self.layout3.addWidget(self.label_imgsz)
-        self.layout3.addWidget(self.line_edit)
-        self.layout3.setAlignment(self.line_edit, Qt.AlignmentFlag.AlignLeft)
+        self.layout3.addWidget(self.line_edit_imgsz)
+        self.layout3.setAlignment(self.line_edit_imgsz, Qt.AlignmentFlag.AlignLeft)
+        self.layout4 = QHBoxLayout() 
+        self.layout4.addWidget(self.label_px)
+        self.layout4.addWidget(self.line_edit_px)
+        self.layout4.setAlignment(self.line_edit_px, Qt.AlignmentFlag.AlignLeft)
         self.layout2.addLayout(self.layout3)
+        self.layout2.addLayout(self.layout4)
         self.setup_before_process_image_ui(self.file_path)
         self.layout2.addWidget(self.come_back_to_download_menu_btn)
         self.layout2.addWidget(self.start_process_image_btn)
@@ -122,5 +141,5 @@ class ShowImageWindow(QWidget):
 
 
     def emit_go_to_processing(self):
-        self.go_to_processing.emit(self.file_path, self.slider_conf.value() / 100, self.slider_iou.value() / 100, self.retina_masks_box.isChecked(), int(self.line_edit.text())) 
+        self.go_to_processing.emit(self.file_path, self.slider_conf.value() / 100, self.slider_iou.value() / 100, self.retina_masks_box.isChecked(), int(self.line_edit_imgsz.text()), float(self.line_edit_px.text())) 
 

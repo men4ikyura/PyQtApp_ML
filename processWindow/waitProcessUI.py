@@ -8,7 +8,7 @@ import tempfile
 
 class ProcessingWindow(QWidget):
     result_ready = pyqtSignal(list, str)
-    come_back_show_image = pyqtSignal(str, float, float, bool, int)
+    come_back_show_image = pyqtSignal(str, float, float, bool, int, float)
 
     def __init__(self, file_path, *args):
         super().__init__()
@@ -67,7 +67,6 @@ class Worker(QObject):
     def run(self):
         try: 
             path_formate_image = self.find_filled_areas(self.file_path)
-            print(path_formate_image)
             result = main(path_formate_image, *self.args)
             self.result_ready.emit(result, path_formate_image)   
         except:
