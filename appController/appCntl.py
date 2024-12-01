@@ -9,6 +9,7 @@ from finishWindow.finishGraphic import GraphicsDraw
 from stackCntrl.stackCntrl import StackCntrl
 from historyWindow.historyUI import HistoryUI
 from documentationWindow.documWnd import DocumentationUI
+from PyQt6.QtGui import QGuiApplication
 
 class AppHandler(QMainWindow):
     
@@ -40,12 +41,14 @@ class AppHandler(QMainWindow):
         # self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
+        self.center()
         widget_instance.come_back_main_menu.connect(self.show_main_window)
     
     def show_finish_graphics(self, info_drops):
         StackCntrl.clear_stacked_widget(self.stack)
         widget_instance = GraphicsDraw(info_drops)
         self.setWindowTitle("График")
+        self.center()
         # self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
@@ -57,13 +60,13 @@ class AppHandler(QMainWindow):
         """Показывает окно истории обработак."""
         widget_instance = self.add_item_to_stack("История обработок", HistoryUI)
         widget_instance.come_back.connect(self.show_main_window)
+        self.center()
 
 
     def show_settings_window(self):
         """Показывает окно настроек приложения."""
         widget_instance = self.add_item_to_stack("Настройки", SettingController)
         widget_instance.come_back.connect(self.show_main_window)
-        
         
     def show_download_window(self):
         """Показывает окно загрузки."""
@@ -94,6 +97,7 @@ class AppHandler(QMainWindow):
         self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
+        self.center()
         widget_instance.come_back_download_menu.connect(self.show_download_window)
         widget_instance.get_data_to_graphics.connect(self.show_finish_graphics)
 
@@ -121,6 +125,15 @@ class AppHandler(QMainWindow):
         self.stack.setCurrentWidget(widget_instance)
 
         return widget_instance
+    
+    def center(self):
+
+        qr = self.frameGeometry()
+        cp = self.screen().availableGeometry().center()
+
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+ 
 
 
     

@@ -32,7 +32,8 @@ class DownloadMainWindowUI(QMainWindow):
 
     def setup_start_downaload_ui(self):
         
-        title = QLabel("Загрузите изображение в формате PNG или JPG.\nРекомендованный размер изображения 1280×1280 пикселей.")
+        # title = QLabel("Загрузите изображение в формате PNG или JPG.\nРекомендованный размер изображения 1280×1280 пикселей.")
+        title = QLabel("Загрузите изображение")
         layout1 =  QVBoxLayout()
         layout1.addWidget(title, alignment=Qt.AlignmentFlag.AlignCenter)
         layout1.addWidget(self.open_file_button) 

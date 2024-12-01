@@ -43,7 +43,9 @@ class FinishImageWindow(QWidget):
         custom_widget = CustomPaintWidget(file_path, info_drops, koef, width_file, height_file)
         vr_layout.addWidget(custom_widget)
         self.setLayout(vr_layout)
+        
 
+    
     
     def sizeHint(self):
         return QSize(self.width_window, self.height_window)
@@ -139,7 +141,6 @@ class FinishImageWindow(QWidget):
 
         
     def emit_come_back_download_menu(self):
-        print(self.file_path)
         os.remove(self.file_path)
         self.come_back_download_menu.emit()
 
