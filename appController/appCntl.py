@@ -41,7 +41,6 @@ class AppHandler(QMainWindow):
         # self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
-        self.center()
         widget_instance.come_back_main_menu.connect(self.show_main_window)
     
     def show_finish_graphics(self, info_drops):

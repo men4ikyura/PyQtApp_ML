@@ -13,8 +13,10 @@ def main(path_image, conf, iou, retina_masks, imgsz, multiplier_from_pixels_to_m
     # тип - число с плавающей точкой больше нуля
     # значение по умолчанию 7.5
     # multiplier_from_pixels_to_microns = 7.5
-
-    model_path = 'best.pt'
+    model_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), 'best.pt')
+    with open("/Users/yurazhilin/Desktop/pyQtApp/finishWindow/path.txt", "w") as file:
+        file.write(model_path)
+    # model_path = 'best.pt'
     # загружаем модель
     model = YOLO(model_path)
 

@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QWidget, QLabel, QMainWindow
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt
 
 
 class MainUI(QMainWindow):

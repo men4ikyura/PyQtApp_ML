@@ -18,7 +18,6 @@ class HistoryUI(QMainWindow):
 
 
     def setup_settings_ui(self):
-        # self.digit_label = QLabel(f"Текущий счетчик: {self.digit}")
         self.come_back_main_menu_btn.setFixedSize(300, 30)
         layout = QVBoxLayout()
         title = QLabel("Это иcтория обработок")
