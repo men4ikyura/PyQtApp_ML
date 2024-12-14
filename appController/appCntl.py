@@ -9,7 +9,7 @@ from finishWindow.finishGraphic import GraphicsDraw
 from stackCntrl.stackCntrl import StackCntrl
 from historyWindow.historyUI import HistoryUI
 from documentationWindow.documWnd import DocumentationUI
-from PyQt6.QtGui import QGuiApplication
+
 
 class AppHandler(QMainWindow):
     
@@ -17,7 +17,7 @@ class AppHandler(QMainWindow):
         super().__init__()
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
-        self.show_download_window()
+        self.show_main_window()
 
     
     def show_main_window(self):
@@ -29,18 +29,20 @@ class AppHandler(QMainWindow):
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         self.resize(600,400)
+        self.center()
         widget_instance.setting_btn.clicked.connect(self.show_settings_window)
         widget_instance.download_btn.clicked.connect(self.show_download_window)
         widget_instance.show_hst_btn.clicked.connect(self.show_history_window)
         widget_instance.documentation_btn.clicked.connect(self.show_documentation_wnd)
 
+
     def show_documentation_wnd(self):
         StackCntrl.clear_stacked_widget(self.stack)
         widget_instance = DocumentationUI()
         self.setWindowTitle("Параметры модели")
-        # self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
+        self.center()
         widget_instance.come_back_main_menu.connect(self.show_main_window)
     
     def show_finish_graphics(self, info_drops):
@@ -48,11 +50,9 @@ class AppHandler(QMainWindow):
         widget_instance = GraphicsDraw(info_drops)
         self.setWindowTitle("График")
         self.center()
-        # self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
         widget_instance.come_back_download_menu.connect(self.show_download_window)
-        # widget_instance.file_selected.connect(self.show_image_window)
 
 
     def show_history_window(self):
@@ -75,6 +75,7 @@ class AppHandler(QMainWindow):
         self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
+        self.center()
         widget_instance.come_back.connect(self.show_main_window)
         widget_instance.file_selected.connect(self.show_image_window)
 

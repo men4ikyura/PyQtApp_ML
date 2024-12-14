@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 
 class DocumentationUI(QWidget):
 
@@ -45,7 +45,7 @@ class DocumentationUI(QWidget):
         <p><b>Рекомендации:</b></p>
         <ul>
             <li>Устанавливать значение, которое делится на 32.</li>
-            <li>Если обработка изображения занимает много времени или возникают ошибки, уменьшите значение до <b>620</b>. Это снизит точность, но повысит скорость обработки.</li>
+            <li>Если обработка изображения занимает много времени или возникают ошибки, уменьшите значение до <b>640</b>. Это снизит точность, но повысит скорость обработки.</li>
         </ul>
 
         <h3>4. <b>retina_masks</b> — Точность контуров объекта</h3>
@@ -59,11 +59,10 @@ class DocumentationUI(QWidget):
         <p><b>Рекомендации:</b> Если обработка происходит медленно или возникают ошибки, отключите параметр (<b>False</b>), чтобы повысить скорость работы модели.</p>
         """
 
-        # Создание QLabel для отображения текста
         label = QLabel(text)
-        label.setWordWrap(True)  # Включить перенос слов для удобного отображения текста
+        label.setWordWrap(True) 
 
-        # Добавляем QLabel в layout
+
         layout.addWidget(label)
         self.setLayout(layout)
 
