@@ -45,14 +45,12 @@ class FinishImageWindow(QWidget):
         self.setLayout(vr_layout)
         
 
-    
-    
     def sizeHint(self):
         return QSize(self.width_window, self.height_window)
 
     
     def emit_graphic_data(self):
-        os.remove(self.file_path)
+        # os.remove(self.file_path)
         self.get_data_to_graphics.emit(self.info_drops)
 
     # def paintEvent(self, event):
@@ -141,7 +139,7 @@ class FinishImageWindow(QWidget):
 
         
     def emit_come_back_download_menu(self):
-        os.remove(self.file_path)
+        # os.remove(self.file_path)
         self.come_back_download_menu.emit()
 
 

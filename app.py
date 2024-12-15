@@ -10,3 +10,4 @@ if __name__=="__main__":
     app.exec()
 
 #pyinstaller -w --icon=icon.ico --name=Voshod app.py
+#pyinstaller -w  --icon=icon.ico --add-data "./icon.ico:resources" --add-data "./best.pt:resources" --name=Voshod app.py

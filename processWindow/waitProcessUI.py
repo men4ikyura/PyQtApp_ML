@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox
 from PyQt6.QtCore import Qt, pyqtSignal, QThread
-from methods_new import main
+from scripts_yolo.methods_new import main
 from PyQt6.QtCore import QObject, pyqtSignal, QSize
 from PIL import Image
 import tempfile
@@ -46,16 +46,15 @@ class ProcessingWindow(QWidget):
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
        
-    def show_mistake(self):
+    def show_mistake(self, info_error):
         self.come_back_show_image.emit(self.file_path, *self.args)
-        QMessageBox.information(self, "Erorr", "Ошибка обработки, попробуй-те поменять параметры")
+        QMessageBox.information(self, "Erorr", f"{info_error}\nОшибка обработки, попробуй-те поменять параметры")
         
-
-
+        
 class Worker(QObject):
     result_ready = pyqtSignal(list, str)
     finished = pyqtSignal()
-    error_call = pyqtSignal()
+    error_call = pyqtSignal(str)
 
 
     def __init__(self, file_path, args):
@@ -69,8 +68,8 @@ class Worker(QObject):
             path_formate_image = self.find_filled_areas(self.file_path)
             result = main(path_formate_image, *self.args)
             self.result_ready.emit(result, path_formate_image)   
-        except:
-            self.error_call.emit()
+        except Exception as e:
+            self.error_call.emit(f"{e}")
         finally:
             self.finished.emit()
 
@@ -92,11 +91,17 @@ class Worker(QObject):
                 # Обрезаем изображение по найденной рамке
                 gray_image = img.crop(bbox)
 
-            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
-                temp_file_path = temp_file.name  
+            # при компиляции вернуть
+            # with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
+            #     temp_file_path = temp_file.name  
 
                 # Сохраняем изображение во временный файл
         
-                gray_image.save(temp_file_path)
+            # gray_image.save(temp_file_path)
+            import uuid
+
+            filename = f"{uuid.uuid4()}.jpg"
+            temp_file_path = f"./tmp/{filename}"
+            print(temp_file_path)
+            gray_image.save(temp_file_path)
             return temp_file_path
-        

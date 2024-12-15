@@ -9,6 +9,9 @@ from finishWindow.finishGraphic import GraphicsDraw
 from stackCntrl.stackCntrl import StackCntrl
 from historyWindow.historyUI import HistoryUI
 from documentationWindow.documWnd import DocumentationUI
+from PyQt6.QtGui import QIcon
+import os
+import sys
 
 
 class AppHandler(QMainWindow):
@@ -18,8 +21,11 @@ class AppHandler(QMainWindow):
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
         self.show_main_window()
+        self.setWindowIcon(QIcon('icon.ico'))
+        # self.setWindowIcon(QIcon(f"{os.path.join(sys._MEIPASS, r"resources\icon.ico")}"))
+        self.show_main_window()
 
-    
+
     def show_main_window(self):
         """Показывает главное окно приложения."""
         StackCntrl.clear_stacked_widget(self.stack)
@@ -72,9 +78,9 @@ class AppHandler(QMainWindow):
         StackCntrl.clear_stacked_widget(self.stack)
         widget_instance = DownloadMainWindowUI()
         self.setWindowTitle("Загрузочное меню")
-        self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
+        self.resize(600,400)
         self.center()
         widget_instance.come_back.connect(self.show_main_window)
         widget_instance.file_selected.connect(self.show_image_window)
@@ -110,6 +116,7 @@ class AppHandler(QMainWindow):
         self.resize(widget_instance.sizeHint())
         self.stack.addWidget(widget_instance)
         self.stack.setCurrentWidget(widget_instance)
+        self.center()
         widget_instance.come_back.connect(self.show_download_window)
         widget_instance.go_to_processing.connect(self.show_processing_window)
         
@@ -126,11 +133,10 @@ class AppHandler(QMainWindow):
 
         return widget_instance
     
+    
     def center(self):
-
         qr = self.frameGeometry()
         cp = self.screen().availableGeometry().center()
-
         qr.moveCenter(cp)
         self.move(qr.topLeft())
  

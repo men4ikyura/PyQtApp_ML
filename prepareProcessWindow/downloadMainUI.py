@@ -18,7 +18,6 @@ class DownloadMainWindowUI(QMainWindow):
         self.setup_start_downaload_ui()
         self.connect_signals()
         self.file_path = None
-        self.resize(600, 400)
 
 
     def sizeHint(self):

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QThread
-from methods import main
+from scripts_yolo.methods import main
 
 
 class ProcessingWindow(QWidget):
