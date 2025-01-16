@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox, QPushButton
 from PyQt6.QtCore import Qt, pyqtSignal, QThread
 from scripts_yolo.methods_new import main
 from PyQt6.QtCore import QObject, pyqtSignal, QSize
@@ -9,6 +9,7 @@ import tempfile
 class ProcessingWindow(QWidget):
     result_ready = pyqtSignal(list, str)
     come_back_show_image = pyqtSignal(str, float, float, bool, int, float)
+    # forcdly_finished = pyqtSignal()
 
     def __init__(self, file_path, *args):
         super().__init__()
@@ -16,92 +17,80 @@ class ProcessingWindow(QWidget):
         self.args = args
         self.setWindowTitle("Обработка изображения")
         self.main_layout = QVBoxLayout()
-        self.title_label = QLabel("Идёт обработка изображения, пожалуйста, подождите...")
-        self.title_label.setStyleSheet("font-size: 18px; font-weight: bold; text-align: center;")
+        self.title_label = QLabel(
+            "Идёт обработка изображения, пожалуйста, подождите...")
+        self.title_label.setStyleSheet(
+            "font-size: 18px; font-weight: bold; text-align: center;")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.main_layout.addWidget(self.title_label)
         self.resize(600, 400)
-
         self.setLayout(self.main_layout)
-
-        self.thread = None
-        self.worker = None
+        self.thread_procces = None
+        self.worker_procces = None
 
     def sizeHint(self):
         return QSize(self.width(), self.height())
-    
+
     def showEvent(self, event):
         super().showEvent(event)
         self.setup_thread()
 
     def setup_thread(self):
-        self.thread = QThread()
-        self.worker = Worker(self.file_path, self.args)  
-        self.worker.moveToThread(self.thread)
-        self.worker.error_call.connect(self.show_mistake)
-        self.thread.started.connect(self.worker.run)
-        self.worker.result_ready.connect(self.result_ready)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.thread.start()
-       
+        self.thread_procces = QThread()
+        self.worker_procces = WorkerProcces(self.file_path, self.args)
+        self.worker_procces.moveToThread(self.thread_procces)
+        self.worker_procces.error_call.connect(self.show_mistake)
+        self.thread_procces.started.connect(self.worker_procces.run)
+        self.worker_procces.result_ready.connect(self.result_ready)
+        self.worker_procces.finished.connect(self.thread_procces.quit)
+        self.worker_procces.finished.connect(self.worker_procces.deleteLater)
+        self.thread_procces.finished.connect(self.thread_procces.deleteLater)
+        self.thread_procces.start()
+
     def show_mistake(self, info_error):
         self.come_back_show_image.emit(self.file_path, *self.args)
-        QMessageBox.information(self, "Erorr", f"{info_error}\nОшибка обработки, попробуй-те поменять параметры")
-        
-        
-class Worker(QObject):
+        QMessageBox.information(self, "Erorr", f"{
+                                info_error}\nОшибка обработки, попробуй-те поменять параметры")
+
+
+class WorkerProcces(QObject):
     result_ready = pyqtSignal(list, str)
     finished = pyqtSignal()
     error_call = pyqtSignal(str)
-
 
     def __init__(self, file_path, args):
         super().__init__()
         self.file_path = file_path
         self.args = args
-      
 
     def run(self):
-        try: 
+        try:
             path_formate_image = self.find_filled_areas(self.file_path)
             result = main(path_formate_image, *self.args)
-            self.result_ready.emit(result, path_formate_image)   
+            self.result_ready.emit(result, path_formate_image)
         except Exception as e:
             self.error_call.emit(f"{e}")
         finally:
             self.finished.emit()
 
-
     def find_filled_areas(self, file_path):
         with Image.open(file_path) as img:
-            # Преобразуем изображение в оттенки серого
             gray_image = img.convert("L")
-
-            # Применяем пороговую фильтрацию, чтобы отделить заполненные области (например, значимые пиксели)
-            # Порог для выделения "заполненных" областей (чем выше, тем светлее пиксели)
-            threshold = 30 # константу сам подобрал на ориг фотках
+            threshold = 30
             bw_image = gray_image.point(lambda p: p > threshold and 255)
-
-            # Используем getbbox(), чтобы найти ограничивающую рамку заполненных областей
-            bbox = bw_image.getbbox()  # Возвращает кортеж (left, upper, right, lower)
+            bbox = bw_image.getbbox()
 
             if bbox:
-                # Обрезаем изображение по найденной рамке
                 gray_image = img.crop(bbox)
 
-            # при компиляции вернуть
-            # with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
-            #     temp_file_path = temp_file.name  
+            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
+                temp_file_path = temp_file.name
 
-                # Сохраняем изображение во временный файл
-        
-            # gray_image.save(temp_file_path)
-            import uuid
-
-            filename = f"{uuid.uuid4()}.jpg"
-            temp_file_path = f"./tmp/{filename}"
-            print(temp_file_path)
             gray_image.save(temp_file_path)
+
             return temp_file_path
+
+            # filename = f"{uuid.uuid4()}.jpg"
+            # temp_file_path = f"./tmp/{filename}"
+            # gray_image.save(temp_file_path)
+            # return temp_file_path
