@@ -41,8 +41,7 @@ def main(path_image, conf, iou, retina_masks, imgsz, multiplier_from_pixels_to_m
     # # #                                                       (маска3, площадь3, центр3)
     # # #
     # # #                                             ])
-
-    return (len(result_list), result_list)
+    return [len(result_list), result_list]
 
 
 # собираем кортеж для капли вида (маска, площадь, центр)

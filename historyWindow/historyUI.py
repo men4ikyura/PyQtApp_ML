@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton,QMainWindow
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton,QMainWindow
+from PyQt5.QtCore import Qt, pyqtSignal
 
 class HistoryUI(QMainWindow):
 

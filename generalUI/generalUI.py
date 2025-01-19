@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow
 
 class GeneralUI(QMainWindow):
     def __init__(self):

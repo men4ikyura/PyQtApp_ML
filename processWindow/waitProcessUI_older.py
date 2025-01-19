@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer, QThread
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QThread
 from scripts_yolo.methods import main
 
 

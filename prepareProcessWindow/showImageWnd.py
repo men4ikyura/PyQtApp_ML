@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QSlider, QCheckBox, QLineEdit, QHBoxLayout
-from PyQt6.QtGui import QPixmap, QIntValidator, QDoubleValidator
-from PyQt6.QtCore import Qt, pyqtSignal, QSize, QLocale
-
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QSlider, QCheckBox, QLineEdit, QHBoxLayout
+from PyQt5.QtGui import QPixmap, QIntValidator, QDoubleValidator
+from PyQt5.QtCore import Qt, pyqtSignal, QSize, QLocale
+import json
 
 class ShowImageWindow(QWidget):
     
@@ -16,7 +16,10 @@ class ShowImageWindow(QWidget):
         self.file_label = QLabel(self)
         
         if not args:
-            self.args = (0.25, 0.70, True, 1280, 7.5)
+            # подтягиваем значение с настроек
+            with open("./settings.json") as file:
+                data =  json.load(file)
+                self.args = (data.get("conf", 0.25), data.get("iou", 0.7), data.get("retina_masks", False), data.get("imgsz", 640), data.get("pixels", 7.5))
         else:
             self.args = args
     
@@ -62,7 +65,7 @@ class ShowImageWindow(QWidget):
 
         #выбор количесвто пикселей в микрометре
         self.label_px = QLabel(self)
-        self.label_px.setText("Количесвто пикселей в микрометре")
+        self.label_px.setText("Количесвто пикселей в микроне")
         self.label_px.setMaximumWidth(250)
         self.line_edit_px = QLineEdit(self)
         self.line_edit_px.setText(str(self.args[4]))
@@ -101,8 +104,8 @@ class ShowImageWindow(QWidget):
         self.layout2.addLayout(self.layout3)
         self.layout2.addLayout(self.layout4)
         self.setup_before_process_image_ui(self.file_path)
-        self.layout2.addWidget(self.come_back_to_download_menu_btn)
         self.layout2.addWidget(self.start_process_image_btn)
+        self.layout2.addWidget(self.come_back_to_download_menu_btn)
         self.setLayout(self.layout2) 
         self.resize(600, 500) 
 

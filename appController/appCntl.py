@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QMainWindow, QStackedWidget
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget
 from mainWindow.mainCntl import MainController
-from settingWindow.settingCntl import SettingController
+from settingWindow.settingUI import SettingsUI
 from prepareProcessWindow.downloadMainUI import DownloadMainWindowUI
 from prepareProcessWindow.showImageWnd import ShowImageWindow
 from processWindow.waitProcessUI import ProcessingWindow
@@ -9,12 +9,16 @@ from finishWindow.finishGraphic import GraphicsDraw
 from stackCntrl.stackCntrl import StackCntrl
 from historyWindow.historyUI import HistoryUI
 from documentationWindow.documWnd import DocumentationUI
-from PyQt6.QtGui import QIcon
+from PyQt5.QtGui import QIcon
+from settingWindow.settingUI import SettingsUI
+import os
 
 
 class AppHandler(QMainWindow):
 
     def __init__(self):
+        if not os.path.exists("./settings.json"):
+            SettingsUI.create_settings_file()
         super().__init__()
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
@@ -63,7 +67,7 @@ class AppHandler(QMainWindow):
 
     def show_settings_window(self):
         widget_instance = self.add_item_to_stack(
-            "Настройки", SettingController)
+            "Настройки", SettingsUI)
         widget_instance.come_back.connect(self.show_main_window)
 
     def show_download_window(self):

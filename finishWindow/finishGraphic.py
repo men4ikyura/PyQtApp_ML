@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLineEdit, QFileDialog, QHBoxLayout, QLabel
-from PyQt6.QtCore import pyqtSignal, Qt, QLocale
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLineEdit, QFileDialog, QHBoxLayout, QLabel
+from PyQt5.QtCore import pyqtSignal, Qt, QLocale
 import pyqtgraph as pg
 import numpy as np
-from PyQt6.QtGui import QDoubleValidator
+from PyQt5.QtGui import QDoubleValidator
 import csv
 import pandas as pd
 

@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout,  QPushButton, QLabel
-from PyQt6.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QGuiApplication
-from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout,  QPushButton, QLabel
+from PyQt5.QtGui import QPixmap, QPainter, QPolygon, QPen, QColor, QGuiApplication
+from PyQt5.QtCore import Qt, pyqtSignal, QPoint, QSize
 from PIL import Image
 
 

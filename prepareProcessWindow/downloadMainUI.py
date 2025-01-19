@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QMainWindow, QFileDialog
-from PyQt6.QtCore import pyqtSignal, QSize, Qt
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QMainWindow, QFileDialog
+from PyQt5.QtCore import pyqtSignal, QSize, Qt
 import os
 
 #/Users/yurazhilin/Desktop/pyQtApp/dist/app.app/Contents/Frameworks/prepareProcessWindow

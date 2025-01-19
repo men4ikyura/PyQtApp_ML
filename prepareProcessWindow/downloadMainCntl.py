@@ -1,6 +1,6 @@
 # # from processWindow.downloadMainUI import DownloadMainWindowUI
-# # from PyQt6.QtWidgets import QFileDialog, QStackedWidget
-# # from PyQt6.QtWidgets import QMainWindow
+# # from PyQt5.QtWidgets import QFileDialog, QStackedWidget
+# # from PyQt5.QtWidgets import QMainWindow
 # # from stackCntrl.stackCntrl import StackCntrl
 # # from processWindow.showImageWnd import ShowImageWindow
 
@@ -41,7 +41,7 @@
 # #             name.file_selected.connect(self.show_image_window) 
 
 # from processWindow.downloadMainUI import DownloadMainWindowUI
-# from PyQt6.QtWidgets import QStackedWidget, QMainWindow
+# from PyQt5.QtWidgets import QStackedWidget, QMainWindow
 # from stackCntrl.stackCntrl import StackCntrl
 # from processWindow.showImageWnd import ShowImageWindow
 

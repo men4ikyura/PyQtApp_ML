@@ -1,10 +1,11 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox, QPushButton
-from PyQt6.QtCore import Qt, pyqtSignal, QThread
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QMessageBox, QPushButton
+from PyQt5.QtCore import Qt, pyqtSignal, QThread
 from scripts_yolo.methods_new import main
-from PyQt6.QtCore import QObject, pyqtSignal, QSize
+from PyQt5.QtCore import QObject, pyqtSignal, QSize
 from PIL import Image
 import tempfile
-
+import os
+import uuid
 
 class ProcessingWindow(QWidget):
     result_ready = pyqtSignal(list, str)
@@ -83,14 +84,11 @@ class WorkerProcces(QObject):
             if bbox:
                 gray_image = img.crop(bbox)
 
-            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
-                temp_file_path = temp_file.name
 
+            if not os.path.exists("./tmp"):
+                os.makedirs("./tmp")
+
+            filename = f"{uuid.uuid4()}.jpg"
+            temp_file_path = f"./tmp/{filename}"
             gray_image.save(temp_file_path)
-
             return temp_file_path
-
-            # filename = f"{uuid.uuid4()}.jpg"
-            # temp_file_path = f"./tmp/{filename}"
-            # gray_image.save(temp_file_path)
-            # return temp_file_path

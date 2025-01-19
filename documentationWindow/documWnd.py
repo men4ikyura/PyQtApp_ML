@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton
-from PyQt6.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton
+from PyQt5.QtCore import pyqtSignal
 
 class DocumentationUI(QWidget):
 
